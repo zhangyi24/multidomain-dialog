@@ -1,0 +1,147 @@
+Act definition:
+1、system act
+(1)"hello"-{}
+(2)"request"-{"domain":"slot"}
+    可选domain：电影、音乐
+    可选slot：电影:除了片名|| 音乐：除了歌名
+(3)"inform_no_match"-{"domain":{"major_key":[]}}
+    可选domain：电影、音乐
+    可选slot：电影:片名|| 音乐：歌名
+(4)"inform_one_match"-{"domain":{"major_key":["value"]}}
+    可选domain：电影、音乐
+    可选slot：电影:片名|| 音乐：歌名
+(5)"inform_some_match"-{"domain":{"major_key":["value1","value2",...]}}
+    可选domain：电影、音乐
+    可选slot：电影:片名|| 音乐：歌名
+(6)"inform"-{"domain":["slot1","slot2",...]}
+    可选domain：电影、音乐、天气、时间
+    可选slot：所有requestable slots
+(7)"confirm"-{"domain":{"slot":"value"}}
+    可选domain：电影、音乐
+    可选slot：电影:类型、主演、导演、地区、年代|| 音乐：曲风、歌手、年代
+(8)"affirm"-{}  # 和inform类似。回答用户的confirm
+(9)"deny"-{}  # 和inform类似。回答用户的confirm
+(10)"play"-{"domain":{"major_key":"value"}}
+
+
+2、user act
+(1)"inform_slot"-{"domain":{"slot1":["value1","value2",...], "slot2":["value1","value2",...],...}}
+    注意：这里包括notcare
+    可选domain：电影、音乐
+    可选slot：除了major_key之外的其他informable slot
+(2)"inform_major_key"-{"domain":{"major_key":["value1","value2",...]}}
+    可选domain：电影、音乐、天气
+    可选slot：电影：片名|| 音乐：歌名|| 天气：城市、时间
+(3)"request"-{"domain":["slot1","slot2",...]}
+    可选domain：电影、音乐、天气、时间
+    可选slot：所有requestable slot
+(4)"confirm"-{"domain":{"major_key":{"value"}, {"slot":"value"}}}
+    可选domain：电影、音乐、天气
+    可选slot：所有requestable slot
+(5)"first"-{}
+(6)"second"-{}
+(7)"third"-{}
+(8)"last"-{}
+(9)"other"-{}
+(10)"affirm"-{}
+(11)"deny"-{}
+(12)"implicit_request"-{"domain":{"major_key":{"value"}}}
+
+
+
+Interaction definition:
+1、"hello"-{}
+(1)正常回复：
+    ①"inform_slot"                        多slot，多value，多情感            电影、音乐
+    ②"inform_major_key"                   多major_key                        电影、音乐
+    ③"inform_major_key"+"request"         一个major_key，多slot              电影、音乐、天气
+    ④"inform_major_key"+"confirm"         一个major_key，一个slot            电影、音乐
+    ⑤"request"                            多slot                             时间
+
+
+2、"request"-{"domain":"slot"}
+(1)正常回复：
+    ①"inform_slot"                        一个slot，多value，多情感          电影、音乐
+(2)非正常回复：
+不切换domain：
+    ①"inform_slot"                        多slot，多value，多情感            电影、音乐
+    ②"inform_major_key"                   多major_key                        电影、音乐
+    ③"inform_major_key"+"request"         一个major_key，多slot              电影、音乐
+    ④"inform_major_key"+"confirm"         一个major_key，一个slot            电影、音乐
+切换domain：同"hello"
+
+
+3、"inform_no_match"-{"domain":{"major_key":[]}}
+(1)正常回复：
+    ①"inform_slot"                        多slot，多value，多情感            电影、音乐
+    ②"inform_major_key"                   多major_key                        电影、音乐
+    ③"inform_major_key"+"request"         一个major_key，多slot              电影、音乐
+    ④"inform_major_key"+"confirm"         一个major_key，一个slot            电影、音乐
+(2)非正常回复：
+切换domain：同"hello"
+
+
+4、"inform_one_match"-{"domain":{"major_key":["value "]}}
+(1)正常回复：
+    ①"request"                            多slot                             电影、音乐
+(2)非正常回复：
+不切换domain：
+    ①"inform_slot"                        多slot，多value，多情感            电影、音乐
+    ②"inform_major_key"                   多major_key                        电影、音乐
+    ③"inform_major_key"+"request"         一个major_key，多slot              电影、音乐
+    ④"inform_major_key"+"confirm"         一个major_key，一个slot            电影、音乐
+切换domain：同"hello"
+
+
+5、"inform_some_match"-{"domain":{"major_key":["value1","value2",...]}}
+(1)正常回复：
+    ①"inform_major_key"                   一个major_key                      电影、音乐
+    ②"inform_major_key"+"request"         一个major_key，多slot              电影、音乐
+    ③"inform_major_key"+"confirm"         一个major_key，一个slot            电影、音乐
+    ④"first"                                                                 电影、音乐
+    ⑤"first"+"request"                    多slot                             电影、音乐
+    ⑥"first"+"confirm"                    一个slot                           电影、音乐
+    ⑦"second"                                                                电影、音乐
+    ⑧"second"+"request"                   多slot                             电影、音乐
+    ⑨"second"+"confirm"                   一个slot                           电影、音乐
+    ⑩"third"                                                                 电影、音乐
+    11."third"+"request"                   多slot                             电影、音乐
+    12."third"+"confirm"                   一个slot                           电影、音乐
+    13."last"                                                                 电影、音乐
+    14."last"+"request"                    多slot                             电影、音乐
+    15."last"+"confirm"                    一个slot                           电影、音乐
+    16."other"                                                                电影、音乐
+(2)非正常回复：
+不切换domain：
+    ①"inform_slot"                        多slot，多value，多情感            电影、音乐
+    ②"inform_major_key"                   多major_key                        电影、音乐
+    ③"inform_major_key"+"request"         一个major_key，多slot              电影、音乐
+    ④"inform_major_key"+"confirm"         一个major_key，一个slot            电影、音乐
+切换domain：同"hello"
+
+
+6、"inform"-{"domain":["slot1","slot2",...]}
+(1)正常回复：
+    ①"request"                            多slot                             电影、音乐、时间
+    ②"confirm"                            一slot                             电影、音乐
+    ③"implicit_request"                   一个major_key                      电影、音乐、天气
+    ④"inform_major_key"+"request"         一个major_key，多slot              电影、音乐、天气
+    ⑤"inform_major_key"+"confirm"         一个major_key，一个slot            电影、音乐
+(2)非正常回复：
+不切换domain：
+    ①"inform_slot"                        多slot，多value，多情感            电影、音乐
+    ②"inform_major_key"+"request"         一个major_key，多slot              天气
+    ③"request"                            多slot                             时间
+切换domain：同"hello"
+
+7、"confirm"-{"domain":{"slot":"value"}}
+(1)正常回复：
+    ①"affirm"
+    ②"deny"
+(2)非正常回复：
+不切换domain：
+    ①"inform_slot"                        多slot，多value，多情感            电影、音乐
+    ②"inform_major_key"                   多major_key                        电影、音乐
+    ③"inform_major_key"+"request"         一个major_key，多slot              电影、音乐
+    ④"inform_major_key"+"confirm"         一个major_key，一个slot            电影、音乐
+切换domain：同"hello"
