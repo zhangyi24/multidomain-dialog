@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>多领域信息查询对话系统</title>
+    <style>p{margin:0}</style>
+</head>
+<body>
+<h4>欢迎使用多领域信息查询系统,您可以对电影、音乐、时间、天气信息进行查询。</h4>
+<h4>例如输入“我想看成龙的电影”、“放首周杰伦的歌”、“今天天气如何”、“今天几号了”等。</h4>
+<h4>输入“重来”即可重新开始对话。（本系统目前不支持集外词识别）</h4>
+<h4>Welcome to THU-SPMI multi-domain dialogue system.</h4>
+<h4>You can talk about movies, music, date and weather. We only support Chinese sentences at present.</h4>
+
+
+{% for usr,sys in data%}
+<p>{{usr}}</p>
+<p>{{sys}}</p>
+{% endfor %}
+<br/>
+<form action="" method="post">
+    {% csrf_token %}
+    <label>下一句
+        <input type="text" name="title" required="required"/>
+    </label>
+    <input type="submit">
+</form>
+
+</body>
+</html>
